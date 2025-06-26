@@ -165,7 +165,6 @@ const Index = () => {
                     Event Calendar
                   </h1>
                   <div className="hidden sm:block text-xs text-gray-500 dark:text-gray-400">
-                    FLAM AR Experiences - Frontend Assignment
                   </div>
                 </div>
               </div>
