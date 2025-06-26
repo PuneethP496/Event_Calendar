@@ -1,8 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
+import { Menu, Plus } from 'lucide-react';
 import Calendar from '../components/Calendar/Calendar';
 import EventModal from '../components/EventModal/EventModal';
 import Sidebar from '../components/Sidebar/Sidebar';
+import ThemeToggle from '../components/ThemeToggle';
 import { Event, EventCategory } from '../types/event';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { generateRecurringEvents, detectConflicts } from '../utils/eventUtils';
@@ -123,70 +124,83 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <Sidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        categories={categories}
-        selectedCategories={selectedCategories}
-        onCategoryToggle={(categoryId) => {
-          setSelectedCategories(prev => 
-            prev.includes(categoryId) 
-              ? prev.filter(id => id !== categoryId)
-              : [...prev, categoryId]
-          );
-        }}
-        events={filteredEvents}
-        onEventClick={handleEventClick}
-        onAddCategory={(category) => setCategories([...categories, category])}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors">
+      <div className="flex h-screen">
+        {/* Sidebar */}
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          categories={categories}
+          selectedCategories={selectedCategories}
+          onCategoryToggle={(categoryId) => {
+            setSelectedCategories(prev => 
+              prev.includes(categoryId) 
+                ? prev.filter(id => id !== categoryId)
+                : [...prev, categoryId]
+            );
+          }}
+          events={filteredEvents}
+          onEventClick={handleEventClick}
+          onAddCategory={(category) => setCategories([...categories, category])}
+        />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <header className="bg-white shadow-sm border-b px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="md:hidden p-2 rounded-md hover:bg-gray-100"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              <h1 className="text-2xl font-bold text-gray-900">Event Calendar</h1>
-              <div className="text-sm text-gray-500">
-                FLAM AR Experiences - Frontend Assignment
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Enhanced Header */}
+          <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="lg:hidden p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
+                  aria-label="Open sidebar"
+                >
+                  <Menu className="w-5 h-5" />
+                </button>
+                
+                <div className="flex flex-col">
+                  <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                    Event Calendar
+                  </h1>
+                  <div className="hidden sm:block text-xs text-gray-500 dark:text-gray-400">
+                    FLAM AR Experiences - Frontend Assignment
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <ThemeToggle />
+                <button
+                  onClick={() => {
+                    setEditingEvent(null);
+                    setShowEventModal(true);
+                  }}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span className="hidden sm:inline">Add Event</span>
+                </button>
               </div>
             </div>
-            <button
-              onClick={() => {
-                setEditingEvent(null);
-                setShowEventModal(true);
-              }}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Add Event
-            </button>
-          </div>
-        </header>
+          </header>
 
-        {/* Calendar */}
-        <main className="flex-1 overflow-auto p-6">
-          <Calendar
-            events={filteredEvents}
-            selectedDate={selectedDate}
-            onDateChange={setSelectedDate}
-            onDateClick={handleDateClick}
-            onEventClick={handleEventClick}
-            onEventDrop={handleEventDrop}
-            categories={categories}
-          />
-        </main>
+          {/* Calendar with enhanced responsive design */}
+          <main className="flex-1 overflow-auto p-3 sm:p-6">
+            <div className="max-w-7xl mx-auto">
+              <Calendar
+                events={filteredEvents}
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                onDateClick={handleDateClick}
+                onEventClick={handleEventClick}
+                onEventDrop={handleEventDrop}
+                categories={categories}
+              />
+            </div>
+          </main>
+        </div>
       </div>
 
       {/* Event Modal */}
